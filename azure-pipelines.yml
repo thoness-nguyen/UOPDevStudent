@@ -1,71 +1,31 @@
-name: Student DevOps Flow - Python
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
-on:
-  pull_request:
-    branches: [main, dev]
-  push:
-    branches: [main, dev]
 
-jobs:
-  setup-validate-test:
-    runs-on: ubuntu-latest
+trigger:
+  - main
 
-    steps:
-      # 1. Setup: Checkout code and set up Python
-      - name: Checkout code
-        uses: actions/checkout@v4
+pool:
+  vmImage: 'ubuntu-latest'
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
 
-      # 2. Install dependencies
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
 
-      # 3. Validate code style (lint)
-      - name: Lint with flake8
-        run: |
-          pip install flake8
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+  - script: |
+      python test.py
+    displayName: 'Run Python script'
 
-      # 4. Run automated tests
-      - name: Run tests with pytest
-        run: |
-          pip install pytest
-          pytest
+  # Uncomment below if you use pytest for testing
+  # - script: |
+  #     pytest
+  #   displayName: 'Run tests'
 
-      # 5. Upload test results (optional, for visibility)
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-results
-          path: ./tests/
-
-  # Optional: Deploy on main branch after passing all checks
-  deploy:
-    needs: setup-validate-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      # Here you would add your deployment step, e.g., to a cloud host, or NetSuite if integrated.
-      - name: Deploy step placeholder
-        run: echo "Deployment goes here (to cloud, server, etc.)"
