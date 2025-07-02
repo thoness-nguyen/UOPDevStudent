@@ -1,7 +1,16 @@
 {
 	"folders": [
 		{
+			"name": "UOPDevStudent",
 			"path": "."
+		},
+		{
+			"name": "Python Fundamental",
+			"path": "src/PythonFundamental"
+		},
+		{
+			"name": "vertual envi",
+			"path": "src/ver_env"
 		}
 	],
 	"settings": {}
