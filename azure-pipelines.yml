@@ -1,31 +1,17 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+name: "Python_learning"
 
 trigger:
-  - main
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - src/PythonFundamental
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.x'
-
-  - script: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-    displayName: 'Install dependencies'
-
-  - script: |
-      python test.py
-    displayName: 'Run Python script'
-
-  # Uncomment below if you use pytest for testing
-  # - script: |
-  #     pytest
-  #   displayName: 'Run tests'
-
+extends:
+  template: templates/python-pipeline.yml
+  parameters:
+    workingDirectory: src/PythonFundamental
