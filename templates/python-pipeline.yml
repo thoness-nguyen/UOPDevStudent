@@ -1,15 +1,6 @@
-name: "Python_learning"
-
-trigger:
-  branches:
-    include:
-      - main
-  paths:
-    include:
-      - src/PythonFundamental
-
-pool:
-  vmImage: 'ubuntu-latest'
+parameters:
+  - name: workingDirectory
+    type: string
 
 steps:
   - task: UsePythonVersion@0
@@ -19,11 +10,11 @@ steps:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install -r src/PythonFundamental/requirements.txt
+      pip install -r ${{ parameters.workingDirectory }}/requirements.txt
     displayName: 'Install dependencies'
 
   - task: PythonScript@0
     inputs:
       scriptSource: 'filePath'
-      scriptPath: 'src/PythonFundamental/main.py'
+      scriptPath: '${{ parameters.workingDirectory }}/main.py'
     displayName: 'Run Python Script'
