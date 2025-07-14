@@ -10,11 +10,15 @@ steps:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install -r ${{ parameters.workingDirectory }}/requirements.txt
+      pip install -r requirements.txt || echo "No requirements.txt found. Skipping."
+    workingDirectory: ${{ parameters.workingDirectory }}
     displayName: 'Install dependencies'
 
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'filePath'
-      scriptPath: '${{ parameters.workingDirectory }}/main.py'
-    displayName: 'Run Python Script'
+  - script: |
+      echo "Running all Python scripts in folder..."
+      for file in *.py; do
+        echo "▶ Running $file"
+        python "$file"
+      done
+    workingDirectory: ${{ parameters.workingDirectory }}
+    displayName: 'Run all Python scripts'
