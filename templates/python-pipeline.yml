@@ -10,15 +10,27 @@ steps:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install -r requirements.txt || echo "No requirements.txt found. Skipping."
+      if [ -f requirements.txt ]; then
+        echo "📦 Installing from requirements.txt..."
+        pip install -r requirements.txt
+      else
+        echo "⚠ No requirements.txt found. Skipping."
+      fi
     workingDirectory: ${{ parameters.workingDirectory }}
     displayName: 'Install dependencies'
 
   - script: |
-      echo "Running all Python scripts in folder..."
-      for file in *.py; do
+      echo "🔍 Searching and running all Python scripts recursively..."
+      shopt -s globstar
+      found=false
+      for file in **/*.py; do
+        found=true
         echo "▶ Running $file"
         python "$file"
       done
+      if [ "$found" = false ]; then
+        echo "⚠ No Python files found to run."
+        exit 1
+      fi
     workingDirectory: ${{ parameters.workingDirectory }}
-    displayName: 'Run all Python scripts'
+    displayName: 'Run all Python scripts recursively'
