@@ -1,0 +1,29 @@
+name: "Python_learning"
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - src/PythonFundamental
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+    displayName: 'Set Python Version'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r src/PythonFundamental/requirements.txt
+    displayName: 'Install dependencies'
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: 'src/PythonFundamental/main.py'
+    displayName: 'Run Python Script'
