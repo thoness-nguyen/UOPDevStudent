@@ -1,0 +1,10 @@
+# Python dependencies for UOPDevStudent workspace
+
+numpy
+pandas
+matplotlib
+jupyter
+scikit-learn
+seaborn
+scipy
+statsmodels
